@@ -51,8 +51,12 @@ def strip_accent(s):
     nkfd_form = unicodedata.normalize('NFKD', s)
     return u"".join([c for c in nkfd_form if not unicodedata.combining(c)])
 
-DEFAULT_FILTERS = [lambda x: x.lower(), strip_tags, strip_punctuation, strip_multiple_whitespaces,
-                   strip_numeric, strip_short]
+def strip_url(s):
+    s = re.sub(ur'^((http|https):\/\/\S+)', ur'_link_', s)
+    s = re.sub(ur'\s((http|https):\/\/\S+)', ur' _link_', s)
+    return s
+
+DEFAULT_FILTERS = [lambda x: x.lower(), strip_url, strip_tags, strip_punctuation, strip_multiple_whitespaces, strip_short]
 
 def read_file(path):
     with smart_open(path) as fin:
