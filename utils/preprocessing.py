@@ -1,4 +1,6 @@
 #Source: Gensim
+# -*-coding:utf8 -*
+
 from __future__ import division
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
@@ -121,7 +123,11 @@ def strip_url(s):
     s = re.sub(ur'\s((http|https):\/\/\S+)', ur' _link_', s)
     return s
 
-DEFAULT_FILTERS = [lambda x: x.lower(), strip_url, strip_tags, strip_punctuation, strip_multiple_whitespaces, strip_short]
+def strip_stop_words(s):
+    s = to_unicode(s)
+    return " ".join(e for e in s.split() if e not in STOP_WORDS)
+
+DEFAULT_FILTERS = [lambda x: x.lower(), strip_url, strip_tags, strip_punctuation, strip_stop_words, strip_multiple_whitespaces, strip_short]
 
 def read_file(path):
     with smart_open(path) as fin:
